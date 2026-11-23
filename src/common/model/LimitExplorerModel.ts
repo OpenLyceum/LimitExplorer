@@ -30,7 +30,10 @@ export function counterexample(example: Example, limit: number, epsilon: number,
   }
 
   // For a line, the supremum is reached only at an excluded endpoint.
-  if (Math.abs(limit) + 2 * delta <= epsilon) {
+  const supremum = Math.abs(limit) + 2 * delta;
+  // Decimal slider values can differ from their displayed values by roundoff.
+  const roundoff = 2 * Number.EPSILON * Math.max(supremum, epsilon);
+  if (supremum - epsilon <= roundoff) {
     return null;
   }
   const direction = limit > 0 ? -1 : 1;

@@ -24,6 +24,18 @@ describe("epsilon–delta verification", () => {
     }
   });
 
+  it("accepts an exact decimal boundary despite rounding in the target slider", () => {
+    const target = 34 * 0.05;
+    const epsilon = 1.75;
+    expect(counterexample("removable", target, epsilon, 0.025)).toBeNull();
+
+    const delta = 0.026;
+    const x = counterexample("removable", target, epsilon, delta) ?? 0;
+    expect(x).toBeGreaterThan(-delta);
+    expect(x).toBeLessThan(0);
+    expect(Math.abs(2 * x - target)).toBeGreaterThan(epsilon);
+  });
+
   it("uses the adverse side for an offset target", () => {
     const x = counterexample("continuous", 0.5, 0.6, 0.2) ?? 0;
     expect(x).toBeLessThan(0);
