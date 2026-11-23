@@ -1,21 +1,47 @@
 {
-  "title": "SceneryStack Template",
+  "title": "Limit Explorer",
   "screens": {
-    "sim": "Sim"
+    "approach": "Approach",
+    "epsilonDelta": "Epsilon–Delta"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "The play area shows the main simulation content.",
-      "controlArea": "The control area has a Reset All button that returns the simulation to its starting state.",
-      "interactionHint": "Explore the simulation by interacting with its controls."
+    "approach": {
+      "screenSummary": {
+        "playArea": "Graph with two probes on opposite sides of zero.",
+        "controlArea": "Choose a function and adjust the sliders with the arrow keys.",
+        "interactionHint": "Move the probes toward zero from opposite sides. Zoom to inspect the graph near zero."
+      }
     },
-    "currentDetails": "The simulation is in its initial state.",
-    "controls": {
-      "exampleControl": "Example control"
+    "epsilonDelta": {
+      "screenSummary": {
+        "playArea": "Graph with open input and output bands around zero and the target.",
+        "controlArea": "Choose a function and adjust the sliders with the arrow keys.",
+        "interactionHint": "Choose a target L. Can you keep every nearby output within ε of L?"
+      }
     }
   },
   "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Example Toggle"
+    "title": "Simulation"
+  },
+  "lesson": {
+    "preset": "Change function",
+    "continuous": "Continuous",
+    "removable": "Removable discontinuity",
+    "jump": "Jump discontinuity",
+    "oscillation": "Oscillation",
+    "leftProbe": "Left distance within view",
+    "rightProbe": "Right distance within view",
+    "left": "Left probe",
+    "right": "Right probe",
+    "zoom": "Zoom factor",
+    "undefined": "undefined",
+    "trySmaller": "Keep L = 0 and ε fixed. Try a smaller δ.",
+    "challenge": "Set ε = 1. Try any L, then shrink δ.",
+    "pass": "The inequality holds at every input in the open band.",
+    "fail": "Counterexample in the input band",
+    "zoomNote": "The shaded envelope shows unresolved oscillations.",
+    "pointNote": "The point at x = 0 can have its own value.",
+    "inputBand": "Vertical dashed lines mark x = −δ and x = δ.",
+    "outputBand": "Horizontal dashed lines mark L − ε and L + ε."
   }
 }

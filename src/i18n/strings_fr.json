@@ -1,21 +1,47 @@
 {
-  "title": "Modèle de Simulation",
+  "title": "Explorateur de limites",
   "screens": {
-    "sim": "Simulation"
+    "approach": "Approche",
+    "epsilonDelta": "Epsilon–Delta"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "La zone de jeu affiche le contenu principal de la simulation.",
-      "controlArea": "La zone de contrôle comporte un bouton Tout réinitialiser qui ramène la simulation à son état initial.",
-      "interactionHint": "Explorez la simulation en interagissant avec ses commandes."
+    "approach": {
+      "screenSummary": {
+        "playArea": "Graphe avec deux sondes de part et d’autre de zéro.",
+        "controlArea": "Choisissez une fonction et réglez les curseurs avec les flèches.",
+        "interactionHint": "Rapprochez les sondes de zéro de chaque côté. Zoomez pour examiner le graphe près de zéro."
+      }
     },
-    "currentDetails": "La simulation est dans son état initial.",
-    "controls": {
-      "exampleControl": "Contrôle d'exemple"
+    "epsilonDelta": {
+      "screenSummary": {
+        "playArea": "Graphe avec des bandes ouvertes autour de zéro et de la cible.",
+        "controlArea": "Choisissez une fonction et réglez les curseurs avec les flèches.",
+        "interactionHint": "Choisissez une cible L. Toutes les valeurs proches restent-elles à moins de ε de L ?"
+      }
     }
   },
   "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Exemple de bascule"
+    "title": "Simulation"
+  },
+  "lesson": {
+    "preset": "Changer de fonction",
+    "continuous": "Continue",
+    "removable": "Discontinuité amovible",
+    "jump": "Discontinuité par saut",
+    "oscillation": "Oscillation",
+    "leftProbe": "Distance à gauche dans la vue",
+    "rightProbe": "Distance à droite dans la vue",
+    "left": "Sonde gauche",
+    "right": "Sonde droite",
+    "zoom": "Facteur de zoom",
+    "undefined": "non défini",
+    "trySmaller": "Gardez L = 0 et ε fixe. Essayez un δ plus petit.",
+    "challenge": "Fixez ε = 1. Essayez une cible L, puis réduisez δ.",
+    "pass": "L’inégalité est vérifiée pour toute entrée de la bande ouverte.",
+    "fail": "Contre-exemple dans la bande d’entrée",
+    "zoomNote": "La zone ombrée indique les oscillations trop serrées pour être tracées.",
+    "pointNote": "Le point en x = 0 peut avoir sa propre valeur.",
+    "inputBand": "Les pointillés verticaux marquent x = −δ et x = δ.",
+    "outputBand": "Les pointillés horizontaux marquent L − ε et L + ε."
   }
 }

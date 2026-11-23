@@ -12,15 +12,15 @@
 
 import { StringProperty } from "scenerystack/axon";
 import { Tandem } from "scenerystack/tandem";
-// seed:soak-imports:start
-import SimColors from "../../src/SimColors.js";
-import { SimScreen } from "../../src/sim-screen/SimScreen.js";
-// seed:soak-imports:end
+import { ApproachScreen } from "../../src/approach/ApproachScreen.js";
+import { EpsilonDeltaScreen } from "../../src/epsilon-delta/EpsilonDeltaScreen.js";
+import LimitExplorerColors from "../../src/LimitExplorerColors.js";
 import { describeHeadlessSoak } from "../helpers/headlessSoak.js";
 
 describeHeadlessSoak({
-  // seed:soak-screens:start
-  screens: () => [new SimScreen({ name: new StringProperty("Sim"), tandem: Tandem.OPT_OUT })],
-  tracked: () => ({ SimColors }),
-  // seed:soak-screens:end
+  screens: () => [
+    new ApproachScreen({ name: new StringProperty("Approach"), tandem: Tandem.OPT_OUT }),
+    new EpsilonDeltaScreen({ name: new StringProperty("Epsilon–Delta"), tandem: Tandem.OPT_OUT }),
+  ],
+  tracked: () => ({ LimitExplorerColors }),
 });

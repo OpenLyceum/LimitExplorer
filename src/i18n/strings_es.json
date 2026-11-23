@@ -1,21 +1,47 @@
 {
-  "title": "Plantilla de Simulación",
+  "title": "Explorador de límites",
   "screens": {
-    "sim": "Simulación"
+    "approach": "Aproximación",
+    "epsilonDelta": "Épsilon–Delta"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "El área de juego muestra el contenido principal de la simulación.",
-      "controlArea": "El área de control tiene un botón Restablecer todo que devuelve la simulación a su estado inicial.",
-      "interactionHint": "Explora la simulación interactuando con sus controles."
+    "approach": {
+      "screenSummary": {
+        "playArea": "Gráfica con dos sondas a ambos lados de cero.",
+        "controlArea": "Elige una función y ajusta los controles con las flechas.",
+        "interactionHint": "Acerca las sondas a cero por ambos lados. Amplía la gráfica cerca de cero."
+      }
     },
-    "currentDetails": "La simulación está en su estado inicial.",
-    "controls": {
-      "exampleControl": "Control de ejemplo"
+    "epsilonDelta": {
+      "screenSummary": {
+        "playArea": "Gráfica con franjas abiertas alrededor de cero y del valor objetivo.",
+        "controlArea": "Elige una función y ajusta los controles con las flechas.",
+        "interactionHint": "Elige un valor L. ¿Puedes mantener todos los valores cercanos a menos de ε de L?"
+      }
     }
   },
   "preferences": {
-    "title": "Simulación",
-    "exampleToggle": "Ejemplo de alternancia"
+    "title": "Simulación"
+  },
+  "lesson": {
+    "preset": "Cambiar de función",
+    "continuous": "Continua",
+    "removable": "Discontinuidad evitable",
+    "jump": "Discontinuidad de salto",
+    "oscillation": "Oscilación",
+    "leftProbe": "Distancia izquierda en la vista",
+    "rightProbe": "Distancia derecha en la vista",
+    "left": "Sonda izquierda",
+    "right": "Sonda derecha",
+    "zoom": "Factor de aumento",
+    "undefined": "indefinido",
+    "trySmaller": "Mantén L = 0 y ε fijo. Prueba con un δ más pequeño.",
+    "challenge": "Fija ε = 1. Prueba cualquier L y reduce δ.",
+    "pass": "La desigualdad se cumple para todos los valores de la banda abierta.",
+    "fail": "Contraejemplo en la banda de entrada",
+    "zoomNote": "La zona sombreada indica oscilaciones demasiado juntas para dibujarlas.",
+    "pointNote": "El punto en x = 0 puede tener su propio valor.",
+    "inputBand": "Las líneas verticales discontinuas marcan x = −δ y x = δ.",
+    "outputBand": "Las líneas horizontales discontinuas marcan L − ε y L + ε."
   }
 }

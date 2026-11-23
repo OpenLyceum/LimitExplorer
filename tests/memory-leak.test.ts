@@ -9,11 +9,13 @@
  * tests below using forceGC().
  */
 
-// seed:leak-imports:start
-import { TimeModel } from "../src/common/TimeModel.js";
-// seed:leak-imports:end
+import { ApproachModel } from "../src/approach/model/ApproachModel.js";
+import { LimitExplorerModel } from "../src/common/model/LimitExplorerModel.js";
+import { EpsilonDeltaModel } from "../src/epsilon-delta/model/EpsilonDeltaModel.js";
 import { describeDisposalLeaks } from "./helpers/memoryLeak.js";
 
-// seed:leak-cases:start
-describeDisposalLeaks([{ name: "TimeModel", create: () => new TimeModel(), idempotentDispose: true }]);
-// seed:leak-cases:end
+describeDisposalLeaks([
+  { name: "LimitExplorerModel", create: () => new LimitExplorerModel("approach") },
+  { name: "ApproachModel", create: () => new ApproachModel() },
+  { name: "EpsilonDeltaModel", create: () => new EpsilonDeltaModel() },
+]);

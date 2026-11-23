@@ -1,5 +1,5 @@
 /**
- * SimColors.ts
+ * LimitExplorerColors.ts
  *
  * Defines all dynamic colors for the simulation using ProfileColorProperty.
  *
@@ -10,28 +10,48 @@
  * SceneryStack switches profiles automatically; no manual toggling is needed.
  *
  * ── Usage ─────────────────────────────────────────────────────────────────────
- * Import SimColors and pass properties directly to Node's fillProperty or
+ * Import LimitExplorerColors and pass properties directly to Node's fillProperty or
  * strokeProperty options:
  *
- *   import SimColors from "../../SimColors.js";
+ *   import LimitExplorerColors from "../../LimitExplorerColors.js";
  *
  *   new Rectangle( 0, 0, 100, 50, {
- *     fillProperty: SimColors.backgroundColorProperty,
+ *     fillProperty: LimitExplorerColors.backgroundColorProperty,
  *   });
  *
  * ── How to add a color ────────────────────────────────────────────────────────
- * Add a new ProfileColorProperty entry to the SimColors object below.
+ * Add a new ProfileColorProperty entry to the LimitExplorerColors object below.
  * Always provide both "default" and "projector" values.
  */
 import { ProfileColorProperty } from "scenerystack/scenery";
-import SimNamespace from "./SimNamespace.js";
+import LimitExplorerNamespace from "./LimitExplorerNamespace.js";
 
-const SimColors = {
+const LimitExplorerColors = {
+  secondaryColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "secondary", {
+    default: "#fdbb74",
+    projector: "#9a3412",
+  }),
+  tertiaryColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "tertiary", {
+    default: "#9ee5ba",
+    projector: "#166534",
+  }),
+  quaternaryColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "quaternary", {
+    default: "#d7adfa",
+    projector: "#6b21a8",
+  }),
+  positiveFillColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "positiveFill", {
+    default: "#204859",
+    projector: "#c8e3ee",
+  }),
+  negativeFillColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "negativeFill", {
+    default: "#594152",
+    projector: "#f4d4df",
+  }),
   /**
    * Background color for the simulation screen.
    * Deep navy in default mode; white in projector mode.
    */
-  backgroundColorProperty: new ProfileColorProperty(SimNamespace, "background", {
+  backgroundColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "background", {
     default: "#1a1a2e",
     projector: "#ffffff",
   }),
@@ -40,7 +60,7 @@ const SimColors = {
    * Primary accent color for highlights, selected items, and key UI elements.
    * Sky blue in default mode; dark navy in projector mode.
    */
-  accentColorProperty: new ProfileColorProperty(SimNamespace, "accent", {
+  accentColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "accent", {
     default: "#4fc3f7",
     projector: "#1a1a2e",
   }),
@@ -49,7 +69,7 @@ const SimColors = {
    * Background fill for control panels and dialogs.
    * Deep blue in default mode; light gray in projector mode.
    */
-  panelBackgroundColorProperty: new ProfileColorProperty(SimNamespace, "panelBackground", {
+  panelBackgroundColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "panelBackground", {
     default: "#16213e",
     projector: "#f5f5f5",
   }),
@@ -58,7 +78,7 @@ const SimColors = {
    * Border/stroke color for control panels and dialogs.
    * Teal-navy in default mode; medium gray in projector mode.
    */
-  panelBorderColorProperty: new ProfileColorProperty(SimNamespace, "panelBorder", {
+  panelBorderColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "panelBorder", {
     default: "#0f3460",
     projector: "#999999",
   }),
@@ -67,7 +87,7 @@ const SimColors = {
    * Text color for labels, readouts, and general UI text.
    * Near-white in default mode; near-black in projector mode.
    */
-  textColorProperty: new ProfileColorProperty(SimNamespace, "text", {
+  textColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "text", {
     default: "#e0e0e0",
     projector: "#1a1a1a",
   }),
@@ -78,22 +98,22 @@ const SimColors = {
   // but defined here so every color lives in one themeable place.
 
   /** Fill of light control surfaces: combo-box button/list, editable input fields. */
-  controlSurfaceColorProperty: new ProfileColorProperty(SimNamespace, "controlSurface", {
+  controlSurfaceColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "controlSurface", {
     default: "#ffffff",
     projector: "#ffffff",
   }),
 
   /** Fill of a disabled control surface (grayed-out editable input field). */
-  controlSurfaceDisabledColorProperty: new ProfileColorProperty(SimNamespace, "controlSurfaceDisabled", {
+  controlSurfaceDisabledColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "controlSurfaceDisabled", {
     default: "#cccccc",
     projector: "#cccccc",
   }),
 
   /** Text on light control surfaces: combo items, flat-button labels, field values, preferences. */
-  controlSurfaceTextColorProperty: new ProfileColorProperty(SimNamespace, "controlSurfaceText", {
+  controlSurfaceTextColorProperty: new ProfileColorProperty(LimitExplorerNamespace, "controlSurfaceText", {
     default: "#1a1a1a",
     projector: "#1a1a1a",
   }),
 };
 
-export default SimColors;
+export default LimitExplorerColors;
