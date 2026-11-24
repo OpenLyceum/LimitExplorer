@@ -42,6 +42,17 @@
     "zoomNote": "The shaded envelope shows unresolved oscillations.",
     "pointNote": "The point at x = 0 can have its own value.",
     "inputBand": "Vertical dashed lines mark x = −δ and x = δ.",
-    "outputBand": "Horizontal dashed lines mark L − ε and L + ε."
+    "outputBand": "Horizontal dashed lines mark L − ε and L + ε.",
+    "custom": "Build your own",
+    "leftBranch": "Left branch",
+    "rightBranch": "Right branch",
+    "pointValue": "Value at x = 0",
+    "customNote": "Drag the branches and the point. The limit exists when the branches meet, whatever f(0) is.",
+    "newChallenge": "New challenge",
+    "check": "Check",
+    "challengePrompt": "With ε = {{epsilon}}, find the largest δ that works.",
+    "correct": "Correct: that is the largest δ, to 0.001.",
+    "tooWide": "Too wide: an input in the band leaves the ε-band.",
+    "tooSmall": "That δ works, but a larger one would too."
   }
 }

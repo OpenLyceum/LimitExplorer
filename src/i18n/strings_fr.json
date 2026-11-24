@@ -42,6 +42,17 @@
     "zoomNote": "La zone ombrée indique les oscillations trop serrées pour être tracées.",
     "pointNote": "Le point en x = 0 peut avoir sa propre valeur.",
     "inputBand": "Les pointillés verticaux marquent x = −δ et x = δ.",
-    "outputBand": "Les pointillés horizontaux marquent L − ε et L + ε."
+    "outputBand": "Les pointillés horizontaux marquent L − ε et L + ε.",
+    "custom": "Construisez la vôtre",
+    "leftBranch": "Branche gauche",
+    "rightBranch": "Branche droite",
+    "pointValue": "Valeur en x = 0",
+    "customNote": "Faites glisser les branches et le point. La limite existe quand les branches se rejoignent, quelle que soit f(0).",
+    "newChallenge": "Nouveau défi",
+    "check": "Vérifier",
+    "challengePrompt": "Avec ε = {{epsilon}}, trouvez le plus grand δ qui convient.",
+    "correct": "Correct : c’est le plus grand δ, à 0,001 près.",
+    "tooWide": "Trop large : une entrée sort de la bande ε.",
+    "tooSmall": "Ce δ convient, mais un plus grand aussi."
   }
 }

@@ -1,9 +1,46 @@
 import { Multilink, StringProperty } from "scenerystack/axon";
 import { localeProperty } from "scenerystack/joist";
+import { StringUtils } from "scenerystack/phetcommon";
+import { HBox, type Node } from "scenerystack/scenery";
 import { StringManager } from "../i18n/StringManager.js";
 import Colors from "../LimitExplorerColors.js";
 import { button, column, computed, format, LessonView, slider, text } from "./LessonView.js";
-import { counterexample, evaluate, examples, type LimitExplorerModel } from "./model/LimitExplorerModel.js";
+import {
+  counterexample,
+  evaluate,
+  examples,
+  type LimitExplorerModel,
+  type Piece,
+  pieceRange,
+} from "./model/LimitExplorerModel.js";
+
+// Each arrow-key press moves a custom part by this much (Shift: a quarter).
+const PIECE_KEY_STEP = 0.2;
+
+/** "x + 0.5" or "x − 0.5": one branch of the student's function. */
+function branch(height: number): string {
+  return height === 0 ? "x" : `x ${height < 0 ? "−" : "+"} ${format(Math.abs(height))}`;
+}
+
+function formulaFor(example: LimitExplorerModel["example"]["value"], piece: Piece): string {
+  return example === "custom"
+    ? `f(x) = ${branch(piece.left)}  (x < 0)    f(0) = ${format(piece.point)}    f(x) = ${branch(piece.right)}  (x > 0)`
+    : formulas[example];
+}
+
+/** Half the plot's height in model units: room for the bands, the curve, and the custom grips. */
+function verticalExtent(model: LimitExplorerModel, horizontal: number): number {
+  const example = model.example.value;
+  // The custom function's grips can reach pieceRange plus the branch slope.
+  const customExtent = example === "custom" ? pieceRange + horizontal + 0.25 : 0;
+  if (model.mode === "epsilon-delta") {
+    return Math.max(2.2, Math.abs(model.target.value) + model.epsilon.value + 0.2, customExtent);
+  }
+  if (example === "custom") {
+    return customExtent;
+  }
+  return example === "continuous" || example === "removable" ? 2.2 * model.span : 1.25;
+}
 
 const formulas = {
   continuous: "f(x) = 2x",
@@ -27,9 +64,11 @@ export class LimitExplorerView extends LessonView {
       model.target,
       model.epsilon,
       model.delta,
+      model.piece,
     ] as const;
+    const f = (x: number) => evaluate(model.example.value, x, model.piece.value);
     const probeDetails = (x: number) => {
-      const y = evaluate(model.example.value, x);
+      const y = f(x);
       return `x = ${format(x, 6)}    f(x) = ${y === null ? strings.undefinedStringProperty.value : format(y, 5)}`;
     };
     const left = computed(
@@ -41,11 +80,17 @@ export class LimitExplorerView extends LessonView {
       () => `${strings.rightStringProperty.value}   ${probeDetails(model.rightX)}`,
     );
     const point = computed([...dependencies], () => {
-      const value = evaluate(model.example.value, 0);
+      const value = f(0);
       return `f(0) = ${value === null ? strings.undefinedStringProperty.value : format(value)}`;
     });
     const witness = () =>
-      counterexample(model.example.value, model.target.value, model.epsilon.value, model.delta.value);
+      counterexample(
+        model.example.value,
+        model.target.value,
+        model.epsilon.value,
+        model.delta.value,
+        model.piece.value,
+      );
     const verdict = computed([...dependencies], () => {
       const x = witness();
       return x === null
@@ -60,13 +105,13 @@ export class LimitExplorerView extends LessonView {
       controlDescription: summary.controlAreaStringProperty,
       details: computed([...dependencies], () =>
         approach
-          ? `${formulas[model.example.value]}. ${left.value}. ${right.value}. ${point.value}.`
-          : `${formulas[model.example.value]}. L = ${format(model.target.value)}, ε = ${format(model.epsilon.value)}, δ = ${format(model.delta.value, 3)}. ${verdict.value}`,
+          ? `${formulaFor(model.example.value, model.piece.value)}. ${left.value}. ${right.value}. ${point.value}.`
+          : `${formulaFor(model.example.value, model.piece.value)}. L = ${format(model.target.value)}, ε = ${format(model.epsilon.value)}, δ = ${format(model.delta.value, 3)}. ${verdict.value}`,
       ),
     });
 
     const exampleLabel = computed([model.example], () => strings[`${model.example.value}StringProperty`].value);
-    const formula = computed([model.example], () => formulas[model.example.value]);
+    const formula = computed([model.example, model.piece], () => formulaFor(model.example.value, model.piece.value));
     const zoom = slider(strings.zoomStringProperty, model.zoom, 0, 3, 1, (x) => 10 ** x, 0.1);
     const controls = column(
       text(exampleLabel, 19, 286, true),
@@ -86,19 +131,25 @@ export class LimitExplorerView extends LessonView {
             slider(new StringProperty("ε"), model.epsilon, 0.05, 2, 2, undefined, 0.05),
             slider(new StringProperty("δ"), model.delta, 0.001, 1, 3, undefined, 0.001),
             text(
+              // The custom note is too long for the panel; it goes under the graph instead.
               computed([model.example], () =>
-                model.example.value === "jump" || model.example.value === "oscillation"
-                  ? strings.challengeStringProperty.value
-                  : strings.trySmallerStringProperty.value,
+                model.example.value === "custom"
+                  ? ""
+                  : model.example.value === "jump" || model.example.value === "oscillation"
+                    ? strings.challengeStringProperty.value
+                    : strings.trySmallerStringProperty.value,
               ),
               15,
             ),
+            ...LimitExplorerView.challengeControls(model),
           ]),
     );
     const note = computed([model.example], () =>
-      model.example.value === "oscillation"
-        ? strings.zoomNoteStringProperty.value
-        : strings.pointNoteStringProperty.value,
+      model.example.value === "custom"
+        ? strings.customNoteStringProperty.value
+        : model.example.value === "oscillation"
+          ? strings.zoomNoteStringProperty.value
+          : strings.pointNoteStringProperty.value,
     );
     this.finish(
       controls,
@@ -108,6 +159,13 @@ export class LimitExplorerView extends LessonView {
             text(verdict, 18, 610, true),
             text(strings.inputBandStringProperty, 15, 610),
             text(strings.outputBandStringProperty, 15, 610),
+            text(
+              computed([model.example], () =>
+                model.example.value === "custom" ? strings.customNoteStringProperty.value : "",
+              ),
+              15,
+              610,
+            ),
           ),
       () => model.reset(),
     );
@@ -127,6 +185,11 @@ export class LimitExplorerView extends LessonView {
           drag: (x) => {
             property.value = clamp(Math.abs(plot.modelX(x)) / model.span, 0.005, 1);
           },
+          readout: () => {
+            const x = property === model.left ? model.leftX : model.rightX;
+            const y = f(x);
+            return `x = ${format(x, 6)} · f(x) = ${y === null ? strings.undefinedStringProperty.value : format(y, 5)}`;
+          },
         });
       this.handles = [
         [probe(model.left, Colors.secondaryColorProperty), () => model.leftX],
@@ -138,6 +201,7 @@ export class LimitExplorerView extends LessonView {
         drag: (_x, y) => {
           model.target.value = clamp(snap(plot.modelY(y), 0.05), -2, 2);
         },
+        readout: () => `L = ${format(model.target.value)}`,
       });
       const epsilon = plot.handle({
         fill: Colors.secondaryColorProperty,
@@ -145,6 +209,7 @@ export class LimitExplorerView extends LessonView {
         drag: (_x, y) => {
           model.epsilon.value = clamp(snap(Math.abs(plot.modelY(y) - model.target.value), 0.05), 0.05, 2);
         },
+        readout: () => `ε = ${format(model.epsilon.value)}`,
       });
       const delta = plot.handle({
         fill: Colors.tertiaryColorProperty,
@@ -152,6 +217,7 @@ export class LimitExplorerView extends LessonView {
         drag: (x) => {
           model.delta.value = clamp(snap(Math.abs(plot.modelX(x)), 0.001), 0.001, 1);
         },
+        readout: () => `δ = ${format(model.delta.value, 3)}`,
       });
       this.placeBandHandles = (extent) => {
         target.place(plot.plotX(0.75 * model.span), plot.plotY(model.target.value));
@@ -160,8 +226,59 @@ export class LimitExplorerView extends LessonView {
       };
     }
 
+    // The custom function's parts have no slider, so these grips take the keyboard too.
+    const part = (key: keyof Piece, name: typeof strings.leftBranchStringProperty, readout: () => string) =>
+      plot.handle({
+        fill: key === "point" ? Colors.accentColorProperty : Colors.textColorProperty,
+        cursor: "ns-resize",
+        drag: (_x, y) => {
+          // A branch grip at x moves the branch so it passes through the pointer: height = y − x.
+          const offset = key === "left" ? -this.branchX(model) : key === "right" ? this.branchX(model) : 0;
+          model.shape(key, plot.modelY(y) + offset);
+        },
+        readout,
+        keyboard: { name, step: (_dx, dy) => model.shape(key, model.piece.value[key] + dy * PIECE_KEY_STEP) },
+      });
+    this.pieceHandles = [
+      [part("left", strings.leftBranchStringProperty, () => `x → 0⁻ : ${format(model.piece.value.left)}`), "left"],
+      [part("point", strings.pointValueStringProperty, () => `f(0) = ${format(model.piece.value.point)}`), "point"],
+      [part("right", strings.rightBranchStringProperty, () => `x → 0⁺ : ${format(model.piece.value.right)}`), "right"],
+    ];
+
     Multilink.multilink([localeProperty, ...dependencies], () => this.draw(model));
   }
+
+  /** "Largest δ" challenge: new challenge and check buttons, the prompt, and the verdict. */
+  private static challengeControls(model: LimitExplorerModel): Node[] {
+    const strings = StringManager.getInstance().getLessonStrings();
+    const check = button(strings.checkStringProperty, () => model.checkChallenge());
+    model.challenge.link((challenge) => {
+      check.enabled = challenge !== null;
+    });
+    const prompt = computed([model.challenge, strings.challengePromptStringProperty], () =>
+      model.challenge.value === null
+        ? ""
+        : StringUtils.fillIn(strings.challengePromptStringProperty.value, { epsilon: format(model.challenge.value) }),
+    );
+    const verdict = computed([model.verdict], () =>
+      model.verdict.value ? strings[`${model.verdict.value}StringProperty`].value : "",
+    );
+    return [
+      new HBox({
+        spacing: 7,
+        children: [button(strings.newChallengeStringProperty, () => model.newChallenge()), check],
+      }),
+      text(prompt, 14),
+      text(verdict, 14, 298, true),
+    ];
+  }
+
+  /** The branch grips sit near the outer ends of the branches, clear of the probes and bands. */
+  private branchX(model: LimitExplorerModel): number {
+    return -0.9 * model.span;
+  }
+
+  private readonly pieceHandles: ReadonlyArray<readonly [ReturnType<LessonView["plot"]["handle"]>, keyof Piece]>;
 
   /** Approach probes: each handle rides the graph at its probe's x. */
   private readonly handles: ReadonlyArray<readonly [ReturnType<LessonView["plot"]["handle"]>, () => number]> = [];
@@ -170,15 +287,11 @@ export class LimitExplorerView extends LessonView {
   private draw(model: LimitExplorerModel): void {
     const plot = this.plot;
     const example = model.example.value;
+    const piece = model.piece.value;
+    const f = (x: number) => evaluate(example, x, piece);
     const span = model.span;
     const horizontal = span * 1.06;
-    const linear = example === "continuous" || example === "removable";
-    const extent =
-      model.mode === "epsilon-delta"
-        ? Math.max(2.2, Math.abs(model.target.value) + model.epsilon.value + 0.2)
-        : linear
-          ? 2.2 * span
-          : 1.25;
+    const extent = verticalExtent(model, horizontal);
     plot.setDomain([-horizontal, horizontal, -extent, extent], "x", "f(x)", [-span, 0, span]);
     plot.clear();
     if (model.mode === "epsilon-delta") {
@@ -227,14 +340,14 @@ export class LimitExplorerView extends LessonView {
       }
     }
 
-    this.drawFunction(example, horizontal);
+    this.drawFunction(example, horizontal, piece);
 
     if (model.mode === "approach") {
       for (const [x, color] of [
         [model.leftX, Colors.secondaryColorProperty],
         [model.rightX, Colors.tertiaryColorProperty],
       ] as const) {
-        const y = evaluate(example, x) ?? 0;
+        const y = f(x) ?? 0;
         plot.line(
           [
             [x, 0],
@@ -247,19 +360,42 @@ export class LimitExplorerView extends LessonView {
         plot.point(x, y, color);
       }
       for (const [handle, x] of this.handles) {
-        handle.place(plot.plotX(x()), plot.plotY(evaluate(example, x()) ?? 0));
+        handle.place(plot.plotX(x()), plot.plotY(f(x()) ?? 0));
       }
     } else {
       this.placeBandHandles(extent);
-      const x = counterexample(example, model.target.value, model.epsilon.value, model.delta.value);
+      const x = counterexample(example, model.target.value, model.epsilon.value, model.delta.value, piece);
       if (x !== null) {
-        plot.point(x, evaluate(example, x) ?? 0, Colors.secondaryColorProperty);
+        plot.point(x, f(x) ?? 0, Colors.secondaryColorProperty);
       }
     }
+    this.placePieceHandles(model);
   }
-  private drawFunction(example: LimitExplorerModel["example"]["value"], span: number): void {
+
+  private placePieceHandles(model: LimitExplorerModel): void {
     const plot = this.plot;
-    if (example === "oscillation") {
+    const piece = model.piece.value;
+    const branchX = this.branchX(model);
+    for (const [handle, key] of this.pieceHandles) {
+      const x = key === "left" ? branchX : key === "right" ? -branchX : 0;
+      handle.place(plot.plotX(x), plot.plotY(key === "point" ? piece.point : (evaluate("custom", x, piece) ?? 0)));
+      handle.visible &&= model.example.value === "custom";
+    }
+  }
+  private drawFunction(example: LimitExplorerModel["example"]["value"], span: number, piece: Piece): void {
+    const plot = this.plot;
+    if (example === "custom") {
+      plot.line([
+        [-span, piece.left - span],
+        [0, piece.left],
+      ]);
+      plot.line([
+        [0, piece.right],
+        [span, piece.right + span],
+      ]);
+      plot.point(0, piece.left, Colors.accentColorProperty, true);
+      plot.point(0, piece.right, Colors.accentColorProperty, true);
+    } else if (example === "oscillation") {
       // The phase changes by about a radian per horizontal pixel at this threshold.
       const threshold = Math.min(span, Math.sqrt((2 * span) / plot.widthInPixels));
       plot.region(

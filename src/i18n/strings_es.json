@@ -42,6 +42,17 @@
     "zoomNote": "La zona sombreada indica oscilaciones demasiado juntas para dibujarlas.",
     "pointNote": "El punto en x = 0 puede tener su propio valor.",
     "inputBand": "Las líneas verticales discontinuas marcan x = −δ y x = δ.",
-    "outputBand": "Las líneas horizontales discontinuas marcan L − ε y L + ε."
+    "outputBand": "Las líneas horizontales discontinuas marcan L − ε y L + ε.",
+    "custom": "Construye la tuya",
+    "leftBranch": "Rama izquierda",
+    "rightBranch": "Rama derecha",
+    "pointValue": "Valor en x = 0",
+    "customNote": "Arrastra las ramas y el punto. El límite existe cuando las ramas se unen, sea cual sea f(0).",
+    "newChallenge": "Nuevo reto",
+    "check": "Comprobar",
+    "challengePrompt": "Con ε = {{epsilon}}, encuentra el mayor δ que funcione.",
+    "correct": "Correcto: es el mayor δ, a 0,001.",
+    "tooWide": "Demasiado ancho: una entrada sale de la banda ε.",
+    "tooSmall": "Ese δ funciona, pero uno mayor también."
   }
 }
