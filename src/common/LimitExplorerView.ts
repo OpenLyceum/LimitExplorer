@@ -1,4 +1,5 @@
 import { Multilink, StringProperty } from "scenerystack/axon";
+import { roundSymmetric, toFixedNumber } from "scenerystack/dot";
 import { localeProperty } from "scenerystack/joist";
 import { StringUtils } from "scenerystack/phetcommon";
 import { HBox, type Node } from "scenerystack/scenery";
@@ -172,18 +173,30 @@ export class LimitExplorerView extends LessonView {
 
     const plot = this.plot;
     const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
-    const snap = (value: number, step: number) => Math.round(value / step) * step;
+    const snap = (value: number, step: number) => roundSymmetric(value / step) * step;
     if (approach) {
       this.plot.onDrag((x) => {
         const property = x < 0 ? model.left : model.right;
         property.value = clamp(Math.abs(x) / model.span, 0.005, 1);
       });
-      const probe = (property: typeof model.left, fill: typeof Colors.secondaryColorProperty) =>
+      const probe = (
+        property: typeof model.left,
+        fill: typeof Colors.secondaryColorProperty,
+        name: typeof strings.leftProbeStringProperty,
+        outward: -1 | 1,
+      ) =>
         plot.handle({
           fill,
           cursor: "ew-resize",
           drag: (x) => {
             property.value = clamp(Math.abs(plot.modelX(x)) / model.span, 0.005, 1);
+          },
+          keyboard: {
+            name,
+            direction: "leftRight",
+            step: (dx) => {
+              property.value = clamp(toFixedNumber(property.value + outward * dx * 0.02, 4), 0.005, 1);
+            },
           },
           readout: () => {
             const x = property === model.left ? model.leftX : model.rightX;
@@ -192,14 +205,27 @@ export class LimitExplorerView extends LessonView {
           },
         });
       this.handles = [
-        [probe(model.left, Colors.secondaryColorProperty), () => model.leftX],
-        [probe(model.right, Colors.tertiaryColorProperty), () => model.rightX],
+        [
+          probe(model.left, Colors.secondaryColorProperty, strings.leftProbeHandleStringProperty, -1),
+          () => model.leftX,
+        ],
+        [
+          probe(model.right, Colors.tertiaryColorProperty, strings.rightProbeHandleStringProperty, 1),
+          () => model.rightX,
+        ],
       ];
     } else {
       const target = plot.handle({
         cursor: "ns-resize",
         drag: (_x, y) => {
           model.target.value = clamp(snap(plot.modelY(y), 0.05), -2, 2);
+        },
+        keyboard: {
+          name: strings.targetHandleStringProperty,
+          direction: "upDown",
+          step: (_dx, dy) => {
+            model.target.value = clamp(toFixedNumber(model.target.value + dy * 0.04, 4), -2, 2);
+          },
         },
         readout: () => `L = ${format(model.target.value)}`,
       });
@@ -209,6 +235,13 @@ export class LimitExplorerView extends LessonView {
         drag: (_x, y) => {
           model.epsilon.value = clamp(snap(Math.abs(plot.modelY(y) - model.target.value), 0.05), 0.05, 2);
         },
+        keyboard: {
+          name: strings.epsilonHandleStringProperty,
+          direction: "upDown",
+          step: (_dx, dy) => {
+            model.epsilon.value = clamp(toFixedNumber(model.epsilon.value + dy * 0.04, 4), 0.05, 2);
+          },
+        },
         readout: () => `ε = ${format(model.epsilon.value)}`,
       });
       const delta = plot.handle({
@@ -217,12 +250,21 @@ export class LimitExplorerView extends LessonView {
         drag: (x) => {
           model.delta.value = clamp(snap(Math.abs(plot.modelX(x)), 0.001), 0.001, 1);
         },
+        keyboard: {
+          name: strings.deltaHandleStringProperty,
+          direction: "leftRight",
+          step: (dx) => {
+            model.delta.value = clamp(toFixedNumber(model.delta.value + dx * 0.004, 4), 0.001, 1);
+          },
+        },
         readout: () => `δ = ${format(model.delta.value, 3)}`,
       });
-      this.placeBandHandles = (extent) => {
+      this.placeBandHandles = (extent, horizontal) => {
         target.place(plot.plotX(0.75 * model.span), plot.plotY(model.target.value));
         epsilon.place(plot.plotX(-0.75 * model.span), plot.plotY(model.target.value + model.epsilon.value));
-        delta.place(plot.plotX(model.delta.value), plot.plotY(-0.8 * extent));
+        // Keep the handle reachable when zooming in past the band boundary.
+        delta.place(plot.plotX(Math.min(model.delta.value, horizontal)), plot.plotY(-0.8 * extent));
+        delta.opacity = model.delta.value <= horizontal ? 1 : 0.55;
       };
     }
 
@@ -237,7 +279,11 @@ export class LimitExplorerView extends LessonView {
           model.shape(key, plot.modelY(y) + offset);
         },
         readout,
-        keyboard: { name, step: (_dx, dy) => model.shape(key, model.piece.value[key] + dy * PIECE_KEY_STEP) },
+        keyboard: {
+          name,
+          direction: "upDown",
+          step: (_dx, dy) => model.shape(key, model.piece.value[key] + dy * PIECE_KEY_STEP),
+        },
       });
     this.pieceHandles = [
       [part("left", strings.leftBranchStringProperty, () => `x → 0⁻ : ${format(model.piece.value.left)}`), "left"],
@@ -282,7 +328,7 @@ export class LimitExplorerView extends LessonView {
 
   /** Approach probes: each handle rides the graph at its probe's x. */
   private readonly handles: ReadonlyArray<readonly [ReturnType<LessonView["plot"]["handle"]>, () => number]> = [];
-  private readonly placeBandHandles: (extent: number) => void = () => undefined;
+  private readonly placeBandHandles: (extent: number, horizontal: number) => void = () => undefined;
 
   private draw(model: LimitExplorerModel): void {
     const plot = this.plot;
@@ -363,7 +409,7 @@ export class LimitExplorerView extends LessonView {
         handle.place(plot.plotX(x()), plot.plotY(f(x()) ?? 0));
       }
     } else {
-      this.placeBandHandles(extent);
+      this.placeBandHandles(extent, horizontal);
       const x = counterexample(example, model.target.value, model.epsilon.value, model.delta.value, piece);
       if (x !== null) {
         plot.point(x, f(x) ?? 0, Colors.secondaryColorProperty);
