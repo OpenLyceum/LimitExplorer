@@ -92,6 +92,7 @@ const DELTA_STEP = 0.001;
  * The largest δ in [DELTA_STEP, 1] for which no input in the punctured band
  * leaves the ε-band, by bisection: if a δ works, every smaller δ does too.
  */
+/** @internal Directly tested numerical helper. */
 export function largestDelta(example: Example, limit: number, epsilon: number, piece = defaultPiece): number {
   const works = (delta: number) => counterexample(example, limit, epsilon, delta, piece) === null;
   if (works(1)) {
