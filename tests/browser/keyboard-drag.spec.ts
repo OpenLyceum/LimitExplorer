@@ -1,42 +1,35 @@
 import { expect, test } from "@playwright/test";
 
-test("the approach probes move independently and respect their side of the limit", async ({ page }) => {
+test("the approach probes move toward a from their own side", async ({ page }) => {
   await page.goto("/?ea&screens=1");
-  const left = page.getByRole("application", { name: "Left graph probe", exact: true });
-  const right = page.getByRole("application", { name: "Right graph probe", exact: true });
-  await left.focus();
-  await page.keyboard.press("Shift+Tab");
-  await page.keyboard.press("Tab");
-  await expect(left).toBeFocused();
-  await page.keyboard.press("ArrowRight");
-  await expect(page.getByRole("slider", { name: "Left distance within view" })).toHaveAttribute(
-    "aria-valuenow",
-    "0.43",
-  );
-  await page.keyboard.press("Tab");
+  // The default function, (x² − 1)/(x − 1), is studied at a = 1; the probes start 0.45 away.
+  const left = page.getByText("Left graph probe", { exact: true });
+  const right = page.getByText("Right graph probe", { exact: true });
+  await left.press("ArrowRight");
+  await expect(page.getByText(/Left probe\s+x = 0\.57\b/)).toBeAttached();
+  await right.press("ArrowLeft");
+  await expect(page.getByText(/Right probe\s+x = 1\.43\b/)).toBeAttached();
   await expect(right).toBeFocused();
-  await page.keyboard.press("Shift+ArrowRight");
-  await expect(page.getByRole("slider", { name: "Right distance within view" })).toHaveAttribute(
-    "aria-valuenow",
-    "0.455",
-  );
 });
 
-test("the target and epsilon and delta bands respond along their own axes", async ({ page }) => {
+test("a prediction is judged and described", async ({ page }) => {
+  await page.goto("/?ea&screens=1");
+  await page.getByRole("button", { name: "Sides differ", exact: true }).press("Enter");
+  await expect(page.getByText(/Not quite\. Removable discontinuity: the limit is 2\./)).toBeAttached();
+  await page.getByRole("button", { name: "A number", exact: true }).press("Enter");
+  await expect(page.getByText(/Right\. Removable discontinuity: the limit is 2\./)).toBeAttached();
+});
+
+test("the ε–δ sliders drive the verdict", async ({ page }) => {
   await page.goto("/?ea&screens=2");
-  for (const { name, key, slider, value } of [
-    { name: "Target value L", key: "ArrowUp", slider: "L", value: "0.04" },
-    { name: "Epsilon band", key: "Shift+ArrowDown", slider: "ε", value: "0.49" },
-    { name: "Delta band", key: "Shift+ArrowRight", slider: "δ", value: "0.401" },
-  ]) {
-    const handle = page.getByRole("application", { name, exact: true });
-    await handle.press(key);
-    await expect(page.getByRole("slider", { name: slider, exact: true })).toHaveAttribute("aria-valuenow", value);
-    await expect(handle).toBeFocused();
+  // x² near 1 with L = 0 and ε = 0.5 fails; with L = 1 and a small δ it holds.
+  await expect(page.getByText(/Counterexample in the input band/)).toBeAttached();
+  const target = page.getByRole("slider", { name: "Target L", exact: true });
+  for (let i = 0; i < 20; i++) {
+    await target.press("ArrowRight");
   }
-  await page.getByRole("slider", { name: "Zoom factor", exact: true }).press("End");
-  const delta = page.getByRole("application", { name: "Delta band", exact: true });
-  await delta.press("Shift+ArrowLeft");
-  await expect(page.getByRole("slider", { name: "δ", exact: true })).toHaveAttribute("aria-valuenow", "0.4");
-  await expect(delta).toBeFocused();
+  await expect(target).toHaveAttribute("aria-valuenow", "1");
+  const delta = page.getByRole("slider", { name: "Input distance δ", exact: true });
+  await delta.press("Home");
+  await expect(page.getByText(/The inequality holds at every input/)).toBeAttached();
 });

@@ -7,15 +7,15 @@
   "a11y": {
     "approach": {
       "screenSummary": {
-        "playArea": "Graph with two probes on opposite sides of zero.",
-        "controlArea": "Choose a function and adjust the sliders with the arrow keys.",
-        "interactionHint": "Move the probes toward zero from opposite sides. Zoom to inspect the graph near zero."
+        "playArea": "Graph of f near a, with a probe on each side of a.",
+        "controlArea": "Choose a function, zoom, read the table of values, and predict the limit.",
+        "interactionHint": "Move the probes toward a from both sides. Predict the limit, then check."
       }
     },
     "epsilonDelta": {
       "screenSummary": {
-        "playArea": "Graph with open input and output bands around zero and the target.",
-        "controlArea": "Choose a function and adjust the sliders with the arrow keys.",
+        "playArea": "Graph with an open input band around a and an output band around the target L.",
+        "controlArea": "Choose a function and set L, ε and δ with the sliders or by dragging on the graph.",
         "interactionHint": "Choose a target L. Can you keep every nearby output within ε of L?"
       }
     }
@@ -24,30 +24,22 @@
     "title": "Simulation"
   },
   "lesson": {
-    "preset": "Change function",
     "continuous": "Continuous",
     "removable": "Removable discontinuity",
     "jump": "Jump discontinuity",
     "oscillation": "Oscillation",
     "leftProbeHandle": "Left graph probe",
     "rightProbeHandle": "Right graph probe",
-    "targetHandle": "Target value L",
-    "epsilonHandle": "Epsilon band",
-    "deltaHandle": "Delta band",
     "moveGraphHandles": "Move graph handles",
-    "leftProbe": "Left distance within view",
-    "rightProbe": "Right distance within view",
     "left": "Left probe",
     "right": "Right probe",
     "zoom": "Zoom factor",
     "undefined": "undefined",
-    "trySmaller": "Keep L = 0 and ε fixed. Try a smaller δ.",
-    "challenge": "Set ε = 1. Try any L, then shrink δ.",
+    "trySmaller": "Set L to the limit, then shrink δ until no output leaves the ε-band.",
+    "challenge": "Is there any L that works? Shrink δ and watch for a counterexample.",
     "pass": "The inequality holds at every input in the open band.",
     "fail": "Counterexample in the input band",
-    "zoomNote": "The shaded envelope shows unresolved oscillations.",
-    "pointNote": "The point at x = 0 can have its own value.",
-    "inputBand": "Vertical dashed lines mark x = −δ and x = δ.",
+    "inputBand": "Vertical dashed lines mark x = a − δ and x = a + δ; x = a itself is left out.",
     "outputBand": "Horizontal dashed lines mark L − ε and L + ε.",
     "custom": "Build your own",
     "leftBranch": "Left branch",
@@ -59,6 +51,28 @@
     "challengePrompt": "With ε = {{epsilon}}, find the largest δ that works.",
     "correct": "Correct: that is the largest δ, to 0.001.",
     "tooWide": "Too wide: an input in the band leaves the ε-band.",
-    "tooSmall": "That δ works, but a larger one would too."
+    "tooSmall": "That δ works, but a larger one would too.",
+    "function": "Function",
+    "table": "Values close to a",
+    "prediction": "The limit is",
+    "finite": "A number",
+    "plusInfinity": "+∞",
+    "minusInfinity": "−∞",
+    "sidesDiffer": "Sides differ",
+    "oscillates": "Oscillates",
+    "finiteAnswer": "the limit is {{value}}.",
+    "plusInfinityAnswer": "f(x) grows without bound, so the limit is +∞.",
+    "minusInfinityAnswer": "f(x) falls without bound, so the limit is −∞.",
+    "sidesDifferAnswer": "the one-sided limits are {{left}} and {{right}}, so the limit does not exist.",
+    "oscillatesAnswer": "f(x) keeps swinging between −1 and 1, so the limit does not exist.",
+    "predictRight": "Right.",
+    "predictWrong": "Not quite.",
+    "target": "Target L",
+    "epsilon": "Output tolerance ε",
+    "delta": "Input distance δ",
+    "sinc": "Removable discontinuity",
+    "reciprocal": "Infinite discontinuity",
+    "inverseSquare": "Infinite limit",
+    "squeeze": "Squeezed oscillation"
   }
 }

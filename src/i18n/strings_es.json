@@ -7,16 +7,16 @@
   "a11y": {
     "approach": {
       "screenSummary": {
-        "playArea": "Gráfica con dos sondas a ambos lados de cero.",
-        "controlArea": "Elige una función y ajusta los controles con las flechas.",
-        "interactionHint": "Acerca las sondas a cero por ambos lados. Amplía la gráfica cerca de cero."
+        "playArea": "Gráfica de f cerca de a, con una sonda a cada lado de a.",
+        "controlArea": "Elige una función, haz zoom, lee la tabla de valores y predice el límite.",
+        "interactionHint": "Acerca las sondas a a desde ambos lados. Predice el límite y luego comprueba."
       }
     },
     "epsilonDelta": {
       "screenSummary": {
-        "playArea": "Gráfica con franjas abiertas alrededor de cero y del valor objetivo.",
-        "controlArea": "Elige una función y ajusta los controles con las flechas.",
-        "interactionHint": "Elige un valor L. ¿Puedes mantener todos los valores cercanos a menos de ε de L?"
+        "playArea": "Gráfica con una banda de entrada abierta alrededor de a y una banda de salida alrededor del objetivo L.",
+        "controlArea": "Elige una función y ajusta L, ε y δ con los deslizadores o arrastrando sobre la gráfica.",
+        "interactionHint": "Elige un objetivo L. ¿Puedes mantener todas las salidas cercanas a menos de ε de L?"
       }
     }
   },
@@ -24,30 +24,22 @@
     "title": "Simulación"
   },
   "lesson": {
-    "preset": "Cambiar de función",
     "continuous": "Continua",
     "removable": "Discontinuidad evitable",
     "jump": "Discontinuidad de salto",
     "oscillation": "Oscilación",
     "leftProbeHandle": "Sonda izquierda de la gráfica",
     "rightProbeHandle": "Sonda derecha de la gráfica",
-    "targetHandle": "Valor objetivo L",
-    "epsilonHandle": "Banda épsilon",
-    "deltaHandle": "Banda delta",
     "moveGraphHandles": "Mover los controles de la gráfica",
-    "leftProbe": "Distancia izquierda en la vista",
-    "rightProbe": "Distancia derecha en la vista",
     "left": "Sonda izquierda",
     "right": "Sonda derecha",
     "zoom": "Factor de aumento",
     "undefined": "indefinido",
-    "trySmaller": "Mantén L = 0 y ε fijo. Prueba con un δ más pequeño.",
-    "challenge": "Fija ε = 1. Prueba cualquier L y reduce δ.",
+    "trySmaller": "Pon L en el límite y luego reduce δ hasta que ninguna salida abandone la banda ε.",
+    "challenge": "¿Hay algún L que funcione? Reduce δ y busca un contraejemplo.",
     "pass": "La desigualdad se cumple para todos los valores de la banda abierta.",
     "fail": "Contraejemplo en la banda de entrada",
-    "zoomNote": "La zona sombreada indica oscilaciones demasiado juntas para dibujarlas.",
-    "pointNote": "El punto en x = 0 puede tener su propio valor.",
-    "inputBand": "Las líneas verticales discontinuas marcan x = −δ y x = δ.",
+    "inputBand": "Las rectas verticales discontinuas marcan x = a − δ y x = a + δ; x = a queda excluido.",
     "outputBand": "Las líneas horizontales discontinuas marcan L − ε y L + ε.",
     "custom": "Construye la tuya",
     "leftBranch": "Rama izquierda",
@@ -59,6 +51,28 @@
     "challengePrompt": "Con ε = {{epsilon}}, encuentra el mayor δ que funcione.",
     "correct": "Correcto: es el mayor δ, a 0,001.",
     "tooWide": "Demasiado ancho: una entrada sale de la banda ε.",
-    "tooSmall": "Ese δ funciona, pero uno mayor también."
+    "tooSmall": "Ese δ funciona, pero uno mayor también.",
+    "function": "Función",
+    "table": "Valores cerca de a",
+    "prediction": "El límite es",
+    "finite": "Un número",
+    "plusInfinity": "+∞",
+    "minusInfinity": "−∞",
+    "sidesDiffer": "Lados distintos",
+    "oscillates": "Oscila",
+    "finiteAnswer": "el límite es {{value}}.",
+    "plusInfinityAnswer": "f(x) crece sin cota, así que el límite es +∞.",
+    "minusInfinityAnswer": "f(x) decrece sin cota, así que el límite es −∞.",
+    "sidesDifferAnswer": "los límites laterales son {{left}} y {{right}}, así que el límite no existe.",
+    "oscillatesAnswer": "f(x) oscila sin parar entre −1 y 1, así que el límite no existe.",
+    "predictRight": "Correcto.",
+    "predictWrong": "No del todo.",
+    "target": "Objetivo L",
+    "epsilon": "Tolerancia de salida ε",
+    "delta": "Distancia de entrada δ",
+    "sinc": "Discontinuidad evitable",
+    "reciprocal": "Discontinuidad infinita",
+    "inverseSquare": "Límite infinito",
+    "squeeze": "Oscilación acotada"
   }
 }

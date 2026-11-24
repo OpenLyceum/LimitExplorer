@@ -7,16 +7,16 @@
   "a11y": {
     "approach": {
       "screenSummary": {
-        "playArea": "Graphe avec deux sondes de part et d’autre de zéro.",
-        "controlArea": "Choisissez une fonction et réglez les curseurs avec les flèches.",
-        "interactionHint": "Rapprochez les sondes de zéro de chaque côté. Zoomez pour examiner le graphe près de zéro."
+        "playArea": "Graphe de f près de a, avec une sonde de chaque côté de a.",
+        "controlArea": "Choisissez une fonction, zoomez, lisez le tableau de valeurs et prédisez la limite.",
+        "interactionHint": "Rapprochez les sondes de a des deux côtés. Prédisez la limite, puis vérifiez."
       }
     },
     "epsilonDelta": {
       "screenSummary": {
-        "playArea": "Graphe avec des bandes ouvertes autour de zéro et de la cible.",
-        "controlArea": "Choisissez une fonction et réglez les curseurs avec les flèches.",
-        "interactionHint": "Choisissez une cible L. Toutes les valeurs proches restent-elles à moins de ε de L ?"
+        "playArea": "Graphe avec une bande d’entrée ouverte autour de a et une bande de sortie autour de la cible L.",
+        "controlArea": "Choisissez une fonction et réglez L, ε et δ avec les curseurs ou en faisant glisser sur le graphe.",
+        "interactionHint": "Choisissez une cible L. Pouvez-vous garder toutes les sorties proches à moins de ε de L ?"
       }
     }
   },
@@ -24,30 +24,22 @@
     "title": "Simulation"
   },
   "lesson": {
-    "preset": "Changer de fonction",
     "continuous": "Continue",
-    "removable": "Discontinuité amovible",
-    "jump": "Discontinuité par saut",
+    "removable": "Discontinuité effaçable",
+    "jump": "Discontinuité de saut",
     "oscillation": "Oscillation",
     "leftProbeHandle": "Sonde gauche du graphique",
     "rightProbeHandle": "Sonde droite du graphique",
-    "targetHandle": "Valeur cible L",
-    "epsilonHandle": "Bande epsilon",
-    "deltaHandle": "Bande delta",
     "moveGraphHandles": "Déplacer les poignées du graphique",
-    "leftProbe": "Distance à gauche dans la vue",
-    "rightProbe": "Distance à droite dans la vue",
     "left": "Sonde gauche",
     "right": "Sonde droite",
     "zoom": "Facteur de zoom",
     "undefined": "non défini",
-    "trySmaller": "Gardez L = 0 et ε fixe. Essayez un δ plus petit.",
-    "challenge": "Fixez ε = 1. Essayez une cible L, puis réduisez δ.",
+    "trySmaller": "Placez L sur la limite, puis réduisez δ jusqu’à ce qu’aucune sortie ne quitte la bande ε.",
+    "challenge": "Existe-t-il un L qui convient ? Réduisez δ et guettez un contre-exemple.",
     "pass": "L’inégalité est vérifiée pour toute entrée de la bande ouverte.",
     "fail": "Contre-exemple dans la bande d’entrée",
-    "zoomNote": "La zone ombrée indique les oscillations trop serrées pour être tracées.",
-    "pointNote": "Le point en x = 0 peut avoir sa propre valeur.",
-    "inputBand": "Les pointillés verticaux marquent x = −δ et x = δ.",
+    "inputBand": "Les droites verticales pointillées marquent x = a − δ et x = a + δ ; x = a lui-même est exclu.",
     "outputBand": "Les pointillés horizontaux marquent L − ε et L + ε.",
     "custom": "Construisez la vôtre",
     "leftBranch": "Branche gauche",
@@ -59,6 +51,28 @@
     "challengePrompt": "Avec ε = {{epsilon}}, trouvez le plus grand δ qui convient.",
     "correct": "Correct : c’est le plus grand δ, à 0,001 près.",
     "tooWide": "Trop large : une entrée sort de la bande ε.",
-    "tooSmall": "Ce δ convient, mais un plus grand aussi."
+    "tooSmall": "Ce δ convient, mais un plus grand aussi.",
+    "function": "Fonction",
+    "table": "Valeurs proches de a",
+    "prediction": "La limite est",
+    "finite": "Un nombre",
+    "plusInfinity": "+∞",
+    "minusInfinity": "−∞",
+    "sidesDiffer": "Côtés différents",
+    "oscillates": "Oscille",
+    "finiteAnswer": "la limite vaut {{value}}.",
+    "plusInfinityAnswer": "f(x) croît sans borne, donc la limite est +∞.",
+    "minusInfinityAnswer": "f(x) décroît sans borne, donc la limite est −∞.",
+    "sidesDifferAnswer": "les limites à gauche et à droite valent {{left}} et {{right}}, donc la limite n’existe pas.",
+    "oscillatesAnswer": "f(x) oscille sans cesse entre −1 et 1, donc la limite n’existe pas.",
+    "predictRight": "Exact.",
+    "predictWrong": "Pas tout à fait.",
+    "target": "Cible L",
+    "epsilon": "Tolérance de sortie ε",
+    "delta": "Distance d’entrée δ",
+    "sinc": "Discontinuité effaçable",
+    "reciprocal": "Discontinuité infinie",
+    "inverseSquare": "Limite infinie",
+    "squeeze": "Oscillation encadrée"
   }
 }
