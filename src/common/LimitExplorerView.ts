@@ -112,15 +112,60 @@ export class LimitExplorerView extends LessonView {
       () => model.reset(),
     );
 
+    const plot = this.plot;
+    const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+    const snap = (value: number, step: number) => Math.round(value / step) * step;
     if (approach) {
       this.plot.onDrag((x) => {
         const property = x < 0 ? model.left : model.right;
-        property.value = Math.max(0.005, Math.min(1, Math.abs(x) / model.span));
+        property.value = clamp(Math.abs(x) / model.span, 0.005, 1);
       });
+      const probe = (property: typeof model.left, fill: typeof Colors.secondaryColorProperty) =>
+        plot.handle({
+          fill,
+          cursor: "ew-resize",
+          drag: (x) => {
+            property.value = clamp(Math.abs(plot.modelX(x)) / model.span, 0.005, 1);
+          },
+        });
+      this.handles = [
+        [probe(model.left, Colors.secondaryColorProperty), () => model.leftX],
+        [probe(model.right, Colors.tertiaryColorProperty), () => model.rightX],
+      ];
+    } else {
+      const target = plot.handle({
+        cursor: "ns-resize",
+        drag: (_x, y) => {
+          model.target.value = clamp(snap(plot.modelY(y), 0.05), -2, 2);
+        },
+      });
+      const epsilon = plot.handle({
+        fill: Colors.secondaryColorProperty,
+        cursor: "ns-resize",
+        drag: (_x, y) => {
+          model.epsilon.value = clamp(snap(Math.abs(plot.modelY(y) - model.target.value), 0.05), 0.05, 2);
+        },
+      });
+      const delta = plot.handle({
+        fill: Colors.tertiaryColorProperty,
+        cursor: "ew-resize",
+        drag: (x) => {
+          model.delta.value = clamp(snap(Math.abs(plot.modelX(x)), 0.001), 0.001, 1);
+        },
+      });
+      this.placeBandHandles = (extent) => {
+        target.place(plot.plotX(0.75 * model.span), plot.plotY(model.target.value));
+        epsilon.place(plot.plotX(-0.75 * model.span), plot.plotY(model.target.value + model.epsilon.value));
+        delta.place(plot.plotX(model.delta.value), plot.plotY(-0.8 * extent));
+      };
     }
 
     Multilink.multilink([localeProperty, ...dependencies], () => this.draw(model));
   }
+
+  /** Approach probes: each handle rides the graph at its probe's x. */
+  private readonly handles: ReadonlyArray<readonly [ReturnType<LessonView["plot"]["handle"]>, () => number]> = [];
+  private readonly placeBandHandles: (extent: number) => void = () => undefined;
 
   private draw(model: LimitExplorerModel): void {
     const plot = this.plot;
@@ -160,6 +205,15 @@ export class LimitExplorerView extends LessonView {
           [5, 4],
         );
       }
+      plot.line(
+        [
+          [-span, model.target.value],
+          [span, model.target.value],
+        ],
+        Colors.accentColorProperty,
+        1,
+        [2, 4],
+      );
       for (const y of [low, high]) {
         plot.line(
           [
@@ -192,7 +246,11 @@ export class LimitExplorerView extends LessonView {
         );
         plot.point(x, y, color);
       }
+      for (const [handle, x] of this.handles) {
+        handle.place(plot.plotX(x()), plot.plotY(evaluate(example, x()) ?? 0));
+      }
     } else {
+      this.placeBandHandles(extent);
       const x = counterexample(example, model.target.value, model.epsilon.value, model.delta.value);
       if (x !== null) {
         plot.point(x, evaluate(example, x) ?? 0, Colors.secondaryColorProperty);
