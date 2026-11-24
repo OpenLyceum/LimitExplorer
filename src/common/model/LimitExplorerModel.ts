@@ -1,5 +1,5 @@
 import { NumberProperty, Property } from "scenerystack/axon";
-import { dotRandom } from "scenerystack/dot";
+import { dotRandom, roundSymmetric } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
 
 export const examples = ["continuous", "removable", "jump", "oscillation", "custom"] as const;
@@ -190,7 +190,7 @@ export class LimitExplorerModel implements TModel {
 
   /** Sets one part of the custom function, snapped to 0.05 and kept on the graph. */
   public shape(part: keyof Piece, value: number): void {
-    const snapped = Math.max(-pieceRange, Math.min(pieceRange, Math.round(value * 20) / 20));
+    const snapped = Math.max(-pieceRange, Math.min(pieceRange, roundSymmetric(value * 20) / 20));
     if (snapped !== this.piece.value[part]) {
       this.piece.value = { ...this.piece.value, [part]: snapped };
     }
