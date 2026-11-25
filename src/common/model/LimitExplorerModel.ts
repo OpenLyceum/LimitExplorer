@@ -149,7 +149,10 @@ export function entryFor(example: Example, piece: Piece = defaultPiece): LimitEn
   };
 }
 
-/** f at x for an example, or null where it is undefined. */
+/** f at x for an example, or null where it is undefined.
+ *
+ * @internal Exported for unit tests; not part of the application API.
+ */
 export function evaluate(example: Example, x: number, piece = defaultPiece): number | null {
   return entryFor(example, piece).f(x);
 }
