@@ -8,13 +8,13 @@
  *
  * Conventions
  * ───────────
- *  - Physics / model values use SI units (metres, seconds, kilograms, …);
- *    note the unit in a comment on each value.
+ *  - Model / math values note their unit in a comment on each value.
  *  - Layout / chrome values are in screen pixels.
  *  - Colour strings live in LimitExplorerColors.ts, not here.
  *  - Computed expressions (e.g. `2 * Math.PI`) may stay inline.
  *
- * Remove the example constants below and replace them with the sim's own.
+ * LAYOUT matches the other Calculus I sims (Mean Value Theorem, Riemann Sum
+ * Builder, Related Rates) — keep those copies in sync.
  */
 
 import LimitExplorerNamespace from "./LimitExplorerNamespace.js";
@@ -30,11 +30,33 @@ export const SCREEN_VIEW_MARGIN = 20;
  */
 export const PANEL_CORNER_RADIUS = 6;
 
-// ── Physics / model defaults (SI units) ───────────────────────────────────────
+/**
+ * Shared lesson scaffold: plot left, panel right, notes under the plot.
+ * Keys stay camelCase to match LessonView usage across the Calculus I fleet.
+ */
+export const LAYOUT = {
+  inset: 32,
+  gap: 24,
+  plotWidth: 610,
+  plotHeight: 360,
+  panelWidth: 320,
+  panelHeight: 430,
+  top: 107,
+  notesGap: 14,
+};
 
-// Example: export const GRAVITY_MPS2 = 9.81; // m/s²
+// ── Model / numerics ──────────────────────────────────────────────────────────
+
+/** Even samples of (0, δ) when searching for an ε–δ counterexample. */
+export const LINEAR_SAMPLES = 400;
+
+/** Geometric samples toward 0 when searching for an ε–δ counterexample. */
+export const GEOMETRIC_SAMPLES = 160;
 
 LimitExplorerNamespace.register("LimitExplorerConstants", {
   SCREEN_VIEW_MARGIN,
   PANEL_CORNER_RADIUS,
+  LAYOUT,
+  LINEAR_SAMPLES,
+  GEOMETRIC_SAMPLES,
 });

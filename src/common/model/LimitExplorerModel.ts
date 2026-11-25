@@ -1,6 +1,7 @@
 import { NumberProperty, Property } from "scenerystack/axon";
 import { dotRandom, roundSymmetric } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
+import { GEOMETRIC_SAMPLES, LINEAR_SAMPLES } from "../../LimitExplorerConstants.js";
 
 export const examples = [
   "continuous",
@@ -193,8 +194,6 @@ function oscillationCounterexample(limit: number, epsilon: number, delta: number
 
 // Distances from a sampled on each side: evenly across (0, δ), geometrically toward 0,
 // and just inside δ, where a monotone deviation is largest.
-const LINEAR_SAMPLES = 400;
-const GEOMETRIC_SAMPLES = 160;
 const INSIDE = 1 - 1e-9;
 
 /**
